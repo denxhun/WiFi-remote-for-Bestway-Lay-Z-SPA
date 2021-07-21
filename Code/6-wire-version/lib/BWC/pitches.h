@@ -87,3 +87,5 @@
 #define NOTE_CS8 4435
 #define NOTE_D8  4699
 #define NOTE_DS8 4978
+#define SHORT_NOTE 63
+#define LONG_NOTE 125

@@ -328,37 +328,48 @@ void DSP::begin(int dsp_cs_pin, int dsp_data_pin, int dsp_clk_pin, int dsp_audio
 }
 
 void DSP::playIntro() {
-  int longnote = 125;
-  int shortnote = 63;
-
-  tone(_AUDIO_PIN, NOTE_C7, longnote);
-  delay(2 * longnote);
-  tone(_AUDIO_PIN, NOTE_G6, shortnote);
-  delay(2 * shortnote);
-  tone(_AUDIO_PIN, NOTE_G6, shortnote);
-  delay(2 * shortnote);
-  tone(_AUDIO_PIN, NOTE_A6, longnote);
-  delay(2 * longnote);
-  tone(_AUDIO_PIN, NOTE_G6, longnote);
-  delay(2 * longnote);
+  tone(_AUDIO_PIN, NOTE_C7, LONG_NOTE);
+  delay(2 * LONG_NOTE);
+  tone(_AUDIO_PIN, NOTE_G6, SHORT_NOTE);
+  delay(2 * SHORT_NOTE);
+  tone(_AUDIO_PIN, NOTE_G6, SHORT_NOTE);
+  delay(2 * SHORT_NOTE);
+  tone(_AUDIO_PIN, NOTE_A6, LONG_NOTE);
+  delay(2 * LONG_NOTE);
+  tone(_AUDIO_PIN, NOTE_G6, LONG_NOTE);
+  delay(2 * LONG_NOTE);
   //paus
-  delay(2 * longnote);
-  tone(_AUDIO_PIN, NOTE_B6, longnote);
-  delay(2 * longnote);
-  tone(_AUDIO_PIN, NOTE_C7, longnote);
-  delay(2 * longnote);
+  delay(2 * LONG_NOTE);
+  tone(_AUDIO_PIN, NOTE_B6, LONG_NOTE);
+  delay(2 * LONG_NOTE);
+  tone(_AUDIO_PIN, NOTE_C7, LONG_NOTE);
+  delay(2 * LONG_NOTE);
   noTone(_AUDIO_PIN);
 }
 
 void DSP::beep() {
-  //int longnote = 125;
-  int shortnote = 63;
-  tone(_AUDIO_PIN, NOTE_C6, shortnote);
-  delay(shortnote);
-  tone(_AUDIO_PIN, NOTE_C7, shortnote);
-  delay(shortnote);
+/*
+  tone(_AUDIO_PIN, NOTE_C6, SHORT_NOTE);
+  delay(SHORT_NOTE);
+  tone(_AUDIO_PIN, NOTE_C7, SHORT_NOTE);
+  delay(SHORT_NOTE);
   noTone(_AUDIO_PIN);
+*/
+  myBeep(NOTE_C6, SHORT_NOTE);
 }
+
+void DSP::myBeep(uint16_t frequency, uint8_t duration) {
+  tone(_AUDIO_PIN, NOTE_C6);
+  _toneEnd = millis() + duration;
+}
+
+void DSP::loop(){
+  if (_toneEnd > 0 && millis() >= _toneEnd){
+    noTone(_AUDIO_PIN);
+    _toneEnd = 0;
+  }
+}
+
 
 BWC::BWC(){}
 
@@ -436,6 +447,7 @@ void BWC::loop(){
   //if target temp is unknown, find out.
   if( (_cio.states[TARGET] == 0) && (_qButtonLen == 0) ) qCommand(GETTARGET, (uint32_t)' ', 0, 0);
 
+  _dsp.loop();
   ESP.wdtEnable(0);
 }
 
