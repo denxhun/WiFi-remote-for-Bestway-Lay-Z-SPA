@@ -57,7 +57,7 @@ class CIO {
 	bool _prevUNT;
 	bool _prevHTR;
 	bool _prevFLT;
-	
+
 	char _getChar(uint8_t value);
 };
 
@@ -74,15 +74,18 @@ class DSP {
 	void LEDshow();
 	void playIntro();
 	void beep();
+  void loop();
+  void myBeep(uint16_t freuency, uint8_t duration);
 
   private:
     void _sendBitsToDSP(uint32_t outBits, int bitsToSend);
     uint16_t _receiveBitsFromDSP();
     char _getCode(char value);
-	
+
 	unsigned long _dspLastRefreshTime = 0;
 	unsigned long _dspLastGetButton = 0;
 	uint16_t _oldButton = ButtonCodes[NOBTN];
+  uint16_t _toneEnd;
 	//Pins
 	int _CS_PIN;
 	int _CLK_PIN;
@@ -94,7 +97,7 @@ class BWC {
 
   public:
 	BWC();
-	void begin(void); 
+	void begin(void);
 	void begin2();
     void begin(int, int, int, int, int, int, int);
     void loop();
